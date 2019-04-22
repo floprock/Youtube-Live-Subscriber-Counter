@@ -1,0 +1,149 @@
+<link rel="stylesheet" href="odometer-theme-default.css" />
+<script src="odometer.js"></script>
+<script type="text/javascript" src="jquery-3.1.1.min.js"></script>
+<style>
+    body {
+        background-color: #373f4c; 
+    }
+    	.odometer{
+
+		font-size: 35.5px;
+	}
+    #tseries {
+        float: left;
+          color: white;
+        background-color: #282828;
+    }
+
+    #pewds {
+        float: right;
+          color: white;
+        background-color: #282828;
+    }
+
+    #subdiff {
+        color: white;
+        background-color: #282828;
+    }
+    
+    #mllcontainer {
+        float: left;
+        color: white;
+        
+    }
+
+    #gold {
+        float: right;
+        color: white;
+        
+    }
+</style>
+
+<p>This page is powered by The official Google API's :)</p> 
+<iframe width="560" height="675" src="<!--Youtube URL here--!>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; loop; shuffle" allowfullscreen style="float: left;"></iframe>
+<center>
+
+<div id="subgoal_container_1">
+<p><!--Channel--> still needs</p>
+	<div id="subgoal_channel_1" class="odometer odometergap">0,000,000</div>
+<p>Subscribers to reach <!--Subgoal--> </p>
+</div>
+<div id="subgoal_container_2">
+<p><!--Channel 2--> still needs</p>
+	<div id="subgoal_channel_2" class="odometer odometergap">0,000,000</div>
+<p>Subscribers to reach <!--Subgoal--></p>
+</div>
+<br>
+<br>
+<br>
+<div id="imgcontainer_channel_1">
+<p id="ytimg_channel_1"></p>
+<p id="ytname_channel_1"></p>
+<div id="subcount_channel_1" class="odometer" style="float:right; background-color: #282828;">0,000,000</div>
+</div>
+
+<div id="imgcontainer_channel_2">
+<p id="ytimg_channel_2"></p>
+<p id="ytname_channel_2"></p>
+<div id="subcount_channel_2" class="odometer" style="float:right; background-color: #282828;">0,000,000</div>
+</div>
+</center>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<center>
+    <div id="subdiff">
+<p><!--Channel-->  and <!--Channel 2--> are</p>
+	<div id="subdifference_channel_1_channel_2" class="odometer odometergap">0,000,000</div>
+<p>Subscribers apart</p>
+    </div>
+</center>
+<script>
+
+$(document).ready( function() {
+
+           var chanName = "";
+
+loadChannel(/*Channel ID here*/);
+
+function loadChannel(name) {
+
+	chanName = name;
+
+
+	
+	var channel1 = 'https://www.googleapis.com/youtube/v3/channels?part=snippet&id='/*Channel_ID_here*/'&key='/*Your Google API Key here*/;
+    var channel2 = 'https://www.googleapis.com/youtube/v3/channels?part=snippet&id='/*Channel_ID_here*/'&key='/*Your Google API Key here*/;
+
+	$.getJSON(channel1, function(data) {
+
+		$('#ytimg_channel_1').html('<img src=\"'+data.items[0].snippet.thumbnails.default.url+'\">');
+        $('#ytname_channel_1').html(data.items[0].snippet.title);
+	});
+    	$.getJSON(channel2, function(data) {
+
+		$('#ytimg_channel_2').html('<img src=\"'+data.items[0].snippet.thumbnails.default.url+'\">');
+        $('#ytname_channel_2').html(data.items[0].snippet.title);
+	});
+
+}
+
+	setInterval( function() {
+
+	var url = 'https://www.googleapis.com/youtube/v3/channels?part=statistics&id='/*Channel_ID_1_here*/','/*Channel_ID_2_here*/'&key='/*Your Google API Key here*/;
+    var urlch1 = 'https://www.googleapis.com/youtube/v3/channels?part=statistics&id='/*Channel_ID_1_here*/'&key='/*Your Google API Key here*/;
+    var urlch2 = 'https://www.googleapis.com/youtube/v3/channels?part=statistics&id='/*Channel_ID_2_here*/'&key='/*Your Google API Key here*/;
+	$.getJSON(url, function(data) {
+
+		var ch2 = (data.items[0].statistics.subscriberCount); 
+		var ch1 = (data.items[1].statistics.subscriberCount);
+
+		   var difference = Math.abs(ch2 - ch1);         
+        document.getElementById('subdifference_channel_1_channel_2').innerHTML=difference;
+               
+		});
+
+    $.getJSON(urlch2, function(chan2) {
+
+		var subschan2 = (chan2.items[0].statistics.subscriberCount);
+        var chan2subgoal = Math.abs(/*Subgoal Number*/ - subschan2);
+        document.getElementById('subgoal_channel_2').innerHTML=chan2subgoal;
+        document.getElementById('subcount_channel_2').innerHTML=subschan2;
+	});
+
+    $.getJSON(urlch1, function(chan1) {
+
+		var subschan1 = (chan1.items[0].statistics.subscriberCount);
+        var subgoalchan1 = Math.abs(/*Subgoal Number*/ - subschan1);
+        document.getElementById('subgoal_channel_1').innerHTML=subgoalchan1;
+        document.getElementById('subcount_channel_1').innerHTML=subschan1;
+	});
+
+	}, 5000); // Time to refresh in milliseconds 1000ms = 1s
+
+
+});
+</script>
